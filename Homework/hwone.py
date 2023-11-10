@@ -1,13 +1,20 @@
 import asyncio
-import os
-import random
-from pathlib import Path
-
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
 import logging
+from aiogram import Bot, Dispatcher, types
+from aiogram.filters.command import Command
+import random
+import os
+from pathlib import Path
+from random import choice
 
+ml = []
 
+p = Path("images/")
+for c in p.iterdir():
+    ml.append(c)
+    print(c)
+
+choice(ml)
 
 BOT_TOKEN = '6476302799:AAFcNT6L0Ov_-FOGkzwBRe4A7b3R9d-dRv4'
 bot = Bot(token=BOT_TOKEN)
@@ -19,34 +26,25 @@ async def start(message: types.Message):
     await message.answer("Hi")
 
 @dp.message(Command("myinfo"))
-async def myinfo(messege: types.Message):
-    await messege.answer(f'User ID:123 \n'
-                         f'User first_name:Molly \n'
-                         f'User username: Moly123')
-
+async def echo(message: types.Message):
+    print(message)
+        # print(message.text)
+        # await message.answer("hi")
+    await message.answer(f" Your name is: {message.from_user.first_name}, Your id is: {message.from_user.id}")
 
 @dp.message(Command("picture"))
-# async def send_random_picture(message: types.Message):
-     # folder_path = 'images/'
-    # images = os.listdir(folder_path)
-    # random_image = random.choice(images)
-    # image_path = os.path.join(folder_path, random_image)
-    # photo = types.InputFile(image_path)
-    # await message.answer_photo(photo)
 async def picture(message: types.Message):
-    image_path = Path("images/")
-    images = list(image_path.iterdir())
-    random_image = random.choice(images)
+    file = types.FSInputFile(choice(ml))
+    await message.answer_photo(
+        photo=file,
+    )
 
-    with random_image.open('rb') as photo:
-        await message.answer_photo(photo)
+# @dp.message(Command("picture"))
+# async def picture(message: types.Message):
+#     image = random.choice(os.listdir(path=".\images"))
+#     images = types.FSInputFile(f'./images/{image}')
+#     await message.reply_photo(photo=images)
 
-
-    # file = types.FSInputFile('images/')
-    # await message.answer_photo(
-    #     photo=file
-    # )
-    # bot.send_photo(file, 'photo:')
 
 
 async def mine():
