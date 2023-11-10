@@ -1,9 +1,11 @@
 import asyncio
+import os
+import random
+from pathlib import Path
+
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 import logging
-import os
-import random
 
 
 
@@ -24,21 +26,33 @@ async def myinfo(messege: types.Message):
 
 
 @dp.message(Command("picture"))
+# async def send_random_picture(message: types.Message):
+     # folder_path = 'images/'
+    # images = os.listdir(folder_path)
+    # random_image = random.choice(images)
+    # image_path = os.path.join(folder_path, random_image)
+    # photo = types.InputFile(image_path)
+    # await message.answer_photo(photo)
 async def picture(message: types.Message):
-    file = types.FSInputFile("images/")
-    images = os.listdir(file)
-    random_im = random.choice(images)
-    await message.answer_photo(
-        photo=random_im,
-        caption="Кадита"
-    )
+    image_path = Path("images/")
+    images = list(image_path.iterdir())
+    random_image = random.choice(images)
+
+    with random_image.open('rb') as photo:
+        await message.answer_photo(photo)
 
 
+    # file = types.FSInputFile('images/')
+    # await message.answer_photo(
+    #     photo=file
+    # )
+    # bot.send_photo(file, 'photo:')
 
-async def hwone():
+
+async def mine():
     await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    asyncio.run(hwone())
+    asyncio.run(mine())
