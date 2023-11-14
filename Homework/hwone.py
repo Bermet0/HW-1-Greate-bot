@@ -31,22 +31,6 @@ async def picture(message: types.Message):
     file = types.FSInputFile(images_path)
     await message.answer_photo(file)
 
-# @dp.message(Command("picture"))
-# async def picture(message: types.Message):
-#     image_path = Path('images/')
-#     images = list(image_path.iterdir())
-#     random_image = random.choice(images)
-#
-#     with random_image.open("rb") as photo:
-#         await message.reply_photo(photo)
-
-# @dp.message(Command("picture"))
-# async def picture(message: types.Message):
-#     image = random.choice(os.listdir(path=".\images"))
-#     images = types.FSInputFile(f'./images/{image}')
-#     await message.answer_photo(photo=images)
-
-
 
 async def mine():
     await dp.start_polling(bot)
