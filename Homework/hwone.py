@@ -4,8 +4,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
 import random
 import os
-from pathlib import Path
-from random import choice
+
 
 
 BOT_TOKEN = '6476302799:AAFcNT6L0Ov_-FOGkzwBRe4A7b3R9d-dRv4'
@@ -20,22 +19,32 @@ async def start(message: types.Message):
 @dp.message(Command("myinfo"))
 async def echo(message: types.Message):
     print(message)
-        # print(message.text)
-        # await message.answer("hi")
     await message.answer(f" Your name is: {message.from_user.first_name}, Your id is: {message.from_user.id}")
 
-# @dp.message(Command("picture"))
-# async def picture(message: types.Message):
-#     file = types.FSInputFile(choice(ml))
-#     await message.answer_photo(
-#         photo=file,
-#     )
 
 @dp.message(Command("picture"))
 async def picture(message: types.Message):
-    image = random.choice(os.listdir(path=".\images"))
-    images = types.FSInputFile(f'./images/{image}')
-    await message.reply_photo(photo=images)
+    image_path = 'images'
+    images = os.listdir(image_path)
+    random_image = random.choice(images)
+    images_path = os.path.join(image_path, random_image)
+    file = types.FSInputFile(images_path)
+    await message.answer_photo(file)
+
+# @dp.message(Command("picture"))
+# async def picture(message: types.Message):
+#     image_path = Path('images/')
+#     images = list(image_path.iterdir())
+#     random_image = random.choice(images)
+#
+#     with random_image.open("rb") as photo:
+#         await message.reply_photo(photo)
+
+# @dp.message(Command("picture"))
+# async def picture(message: types.Message):
+#     image = random.choice(os.listdir(path=".\images"))
+#     images = types.FSInputFile(f'./images/{image}')
+#     await message.answer_photo(photo=images)
 
 
 
