@@ -1,16 +1,30 @@
-# This is a sample Python script.
+from aiogram.types import BotCommand
+import asyncio
+import logging
+from bot import dp, bot
+from handlers.start import start_router
+from handlers.picture import picture_router
+from handlers.myinfo import myinfo_router
+from handlers.shop import shop_router
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+
+async def mine():
+    await bot.set_my_commands([
+        BotCommand(command="start", description="Начать"),
+        BotCommand(command="myinfo", description="Показать информацию обо мне"),
+        BotCommand(command="picture", description="Показать случайную картинку"),
+        BotCommand(command="shop", description="Магазин")
+
+    ])
+    dp.include_router(start_router)
+    dp.include_router(picture_router)
+    dp.include_router(myinfo_router)
+    dp.include_router(shop_router)
+
+    await dp.start_polling(bot)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    asyncio.run(mine())
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

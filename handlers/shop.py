@@ -21,7 +21,7 @@ async def shop(message: types.Message):
         resize_keyboard=True
     )
 
-    await message.answer("Выберите категорию товаров:", reply_markup=kb)
+    await message.answer("Выберите сумму для покупки:", reply_markup=kb)
 
 
 @shop_router.message(F.text == "Мои алмазы")
