@@ -3,10 +3,10 @@ import asyncio
 import logging
 from bot import dp, bot
 from handlers import (
-myinfo_router,
-picture_router,
-shop_router,
-start_router
+                      myinfo_router,
+                      picture_router,
+                      shop_router,
+                      start_router
 )
 
 
