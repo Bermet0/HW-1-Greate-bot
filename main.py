@@ -6,7 +6,8 @@ from handlers import (
                       myinfo_router,
                       picture_router,
                       shop_router,
-                      start_router
+                      start_router,
+                      questions_router
 )
 
 
@@ -15,13 +16,15 @@ async def mine():
         BotCommand(command="start", description="Начать"),
         BotCommand(command="myinfo", description="Показать информацию обо мне"),
         BotCommand(command="picture", description="Показать случайную картинку"),
-        BotCommand(command="shop", description="Магазин")
+        BotCommand(command="shop", description="Магазин"),
+        BotCommand(command="question", description="Вопрос")
 
     ])
     dp.include_router(start_router)
     dp.include_router(picture_router)
     dp.include_router(myinfo_router)
     dp.include_router(shop_router)
+    dp.include_router(questions_router)
 
     await dp.start_polling(bot)
 
