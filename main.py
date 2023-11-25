@@ -9,6 +9,13 @@ from handlers import (
                       start_router,
                       questions_router
 )
+from db.queries import init_db, create_tables, populate_tables
+
+
+async def on_startup(dispatcher):
+    init_db()
+    create_tables()
+    populate_tables()
 
 
 async def mine():
@@ -25,6 +32,8 @@ async def mine():
     dp.include_router(myinfo_router)
     dp.include_router(shop_router)
     dp.include_router(questions_router)
+
+    dp.startup.register(on_startup)
 
     await dp.start_polling(bot)
 
