@@ -57,7 +57,8 @@ def populate_tables():
         INSERT INTO products (name, price, image, category_id) VALUES 
         ('Фанни', 399, 'images/jungler.jpg', 1),
         ('Хилос', 599, 'images/tank.jpg', 1),
-        ('Мартис', 599, 'images/fighter.jpg', 1)
+        ('Мартис', 599, 'images/fighter.jpg', 1),
+        ('Кагура: Вишневая Чародейка', 699, 'images/mage.jpg', 2)
         """
     )
     db.commit()
@@ -71,6 +72,36 @@ def get_products():
     )
     return cursor.fetchall()
 
+def get_product_by_category_id(category_id: int):
+    cursor.execute(
+        """
+        SELECT * FROM products WHERE category_id = :cat_id
+        """, {"cat_id": category_id}
+    )
+
+    return cursor.fetchall()
+
+
+def get_product_by_category_name(cat_name: str):
+    cursor.execute(
+        """
+        SELECT * FROM products WHERE category_id = 
+        (
+            SELECT id FROM category WHERE name = :cat_name
+        )
+        """, {"cat_name": cat_name}
+    )
+    return cursor.fetchall()
+
+
+def get_products_with_category():
+    cursor.execute(
+        """
+        SELECT p.name, c.name FROM products AS p JOIN category AS c ON p.category_id = c.id
+        """
+    )
+    return cursor.fetchall()
+
 
 
 
@@ -79,4 +110,9 @@ if __name__ == "__main__":
     create_tables()
     populate_tables()
     pprint(get_products())
-
+    # pprint(get_product_by_category_id(1))
+    # pprint(get_product_by_category_id(2))
+    # pprint(get_products_with_category())
+    # pprint(get_product_by_category_name("Герои"))
+    # pprint(get_product_by_category_name("Скины"))
+    # pprint(get_products_with_category())
