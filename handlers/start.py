@@ -1,5 +1,7 @@
 from aiogram import Router, F ,types
 from aiogram.filters import Command
+from handlers.delayed_answer import delayed_answer_router
+
 
 start_router = Router()
 
@@ -21,6 +23,11 @@ async def start(message: types.Message):
                 types.InlineKeyboardButton(
                     text="О нас", callback_data="about"
                 )
+            ],
+            [
+                types.InlineKeyboardButton(
+                    text="follow", callback_data="Подписаться"
+                )
             ]
         ]
     )
@@ -35,3 +42,11 @@ async def start(message: types.Message):
 async def about_us(callback: types.CallbackQuery):
     await callback.answer()
     await callback.message.answer("Мы многопользовательская командная видеоигра для мобильных устройств")
+
+
+# @delayed_answer_router.message(F.data == "Подписаться")
+# async def follow_user(callback: types.Message):
+#     user_id = str(callback.from_user.id)
+#     user_name = callback.from_user.full_name
+#     follow(user_id, user_name)
+#     await callback.answer("вы подписались!")

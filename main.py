@@ -8,7 +8,7 @@ from handlers import (
                       shop_router,
                       start_router,
                       questions_router,
-                      # delayed_answer_router
+                      delayed_answer_router
 )
 from db.queries import init_db, create_tables, populate_tables
 
@@ -26,7 +26,7 @@ async def mine():
         BotCommand(command="picture", description="Показать случайную картинку"),
         BotCommand(command="shop", description="Магазин"),
         BotCommand(command="question", description="Вопрос"),
-        BotCommand(command="remind", description="годовщина")
+        BotCommand(command="follow", description="годовщина")
     ])
 
     dp.include_router(start_router)
@@ -34,7 +34,7 @@ async def mine():
     dp.include_router(myinfo_router)
     dp.include_router(shop_router)
     dp.include_router(questions_router)
-    # dp.include_router(delayed_answer_router)
+    dp.include_router(delayed_answer_router)
 
     dp.startup.register(on_startup)
 

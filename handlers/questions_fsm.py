@@ -3,14 +3,17 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
+from db.queries import save_questionaire
+
+
 questions_router = Router()
 
 
 class Questionaire(StatesGroup):
     name = State()
-    meet_play = State()
     age = State()
     gender = State()
+    meet_play = State()
 
 
 @questions_router.message(Command("stop"))
@@ -30,21 +33,8 @@ async def start_questions(message: types.Message, state: FSMContext):
 @questions_router.message(F.text, Questionaire.name)
 async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
-    await state.set_state(Questionaire.meet_play)
-    await message.answer("какой год вы играете в нашу игру?")
-
-
-@questions_router.message(F.text, Questionaire.meet_play)
-async def process_meet_play(message: types.Message, state: FSMContext):
-    meet = message.text.strip()
-    if not meet.isdigit():
-        await message.answer("Введите ответ в числах(год)")
-    elif int(meet) < 1 or int(meet) > 8:
-        await message.answer("Наша игра вышла в 2016 г")
-    else:
-        await state.update_data(meet_play=int(meet))
-        await state.set_state(Questionaire.age)
-        await message.answer("Ваш возраст?")
+    await state.set_state(Questionaire.age)
+    await message.answer("Ваш возраст?")
 
 
 @questions_router.message(F.text, Questionaire.age)
@@ -73,8 +63,22 @@ async def process_age(message: types.Message, state: FSMContext):
 @questions_router.message(F.text, Questionaire.gender)
 async def process_gender(message: types.Message, state: FSMContext):
     await state.update_data(gender=message.text)
+    await state.set_state(Questionaire.meet_play)
+    await message.answer("какой год вы играете в нашу игру?")
+
+
+@questions_router.message(F.text, Questionaire.meet_play)
+async def process_meet_play(message: types.Message, state: FSMContext):
+    meet = message.text.strip()
+    if not meet.isdigit():
+        await message.answer("Введите ответ в числах(год)")
+    elif int(meet) < 1 or int(meet) > 8:
+        await message.answer("Наша игра вышла в 2016 г")
+    else:
+        await state.update_data(meet_play=int(meet))
 
     data = await state.get_data()
-    print(data)
+    save_questionaire(data)
+    # print(data)
     await state.clear()
     await message.answer("Спасибо за ваши ответы!")

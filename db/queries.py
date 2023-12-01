@@ -24,6 +24,30 @@ def create_tables():
     )
     cursor.execute(
         """
+        DROP TABLE IF 
+        EXISTS follow
+        """
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS follow (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT
+        )
+        """
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS Questionaire (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        gender TEXT,
+        meet_play INTEGER
+        )
+        """
+    )
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS category (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT
@@ -72,6 +96,7 @@ def get_products():
     )
     return cursor.fetchall()
 
+
 def get_product_by_category_id(category_id: int):
     cursor.execute(
         """
@@ -103,6 +128,33 @@ def get_products_with_category():
     return cursor.fetchall()
 
 
+def save_questionaire(data):
+    print(data)
+    cursor.execute(
+        """
+        INSERT INTO Questionaire (name, gender, meet_play)
+        VALUES (:name, :gender, :meet_play)
+        """, data
+    )
+    db.commit()
+
+
+def follow(user_id: str, user_name: str):
+    cursor.execute(
+        '''
+        INSERT INTO follow (user_id, user_name) VALUES (?, ?)
+        ''', (user_id, user_name)
+    )
+    db.commit()
+
+
+def get_follow():
+    cursor.execute(
+        '''
+        SELECT * FROM follow
+        '''
+    )
+    return cursor.fetchall()
 
 
 if __name__ == "__main__":
