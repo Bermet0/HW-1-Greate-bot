@@ -1,10 +1,11 @@
 import asyncio
+from db import queries
+from db.queries import save_house
 from parsel import Selector
 import httpx
-from db.queries import save_ad_to_db
+
 
 MAIN_URL = "https://www.house.kg/snyat"
-parse_ads = MAIN_URL
 
 
 def get_html(url):
@@ -20,37 +21,38 @@ def get_title(selector: Selector):
 
 
 def get_all_catalog_items(selector: Selector):
-    items = selector.css(".listings-wrapper")
+    items = selector.css('.listings_wrapper div.listing')
     return items
 
 
-def clean_text(text):
+def clear_text(text):
     if text is None:
         return ''
 
     result = text.strip().replace("\n", "").replace("\t", "")
     result = ' '.join(result.split())
-    if result[-1] == " ,":
-        result.replace(" ,", "")
+    if result[-1] == ' ,':
+        result.replace(' ,', '')
     return result
 
 
 def main():
-    for page in range(1, 10):
-        html = get_html(MAIN_URL + f"/offers/{page}")
-        selector = Selector(text=html)
-        # get_title(selector)
-        items = get_all_catalog_items(selector)
-        for item in items:
-            title = clean_text(item.css(".title::text").get())
-            descr = clean_text(item.css(".top-info::text").get())
-            url = item.css("::attr(href)").get()
-            print(f"{MAIN_URL}{url}")
-            # # image_url = item.css(".catalog-item-cover img::attr(src)").get()
-            # # print(image_url)
-            # save_ad_to_db(title, descr, url)
+    html = get_html(MAIN_URL + '/offers')
+    selector = Selector(text=html)
+    # get_title(selector)
+    items = get_all_catalog_items(selector)
+    for item in items:
+        title = clear_text(item.css('.title::text').get())
 
+        descr = clear_text(item.css('.description::text').get())
+        price = clear_text(item.css('.sep.main::text').get())
+        url0 = item.css('::attr(href)').get()
+        url = (f'{MAIN_URL}{url0}')
+        img = clear_text(item.css('.tmb-wrap-table::attr(src)').get())
+        # print(img)
+        save_house(title, descr, price, url, img)
 
 
 if __name__ == "__main__":
+    queries.init_db()
     main()
