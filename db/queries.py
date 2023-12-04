@@ -28,6 +28,17 @@ def create_tables():
         EXISTS follow
         """
     )
+    cursor.execute('''DROP TABLE IF EXISTS house''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS house (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        descr TEXT,
+        price INT,
+        url TEXT,
+        img TEXT
+        )
+        ''')
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS follow (
@@ -155,6 +166,21 @@ def get_follow():
         '''
     )
     return cursor.fetchall()
+
+
+def save_house(title, descr, price, url, img):
+    data = {
+        'title': title,
+        'descr': descr,
+        'price': price,
+        'url': url,
+        'img': img
+    }
+
+    cursor.execute('''
+    INSERT INTO house (title, descr, price, url, img) VALUES
+    (:title, :descr, :price, :url, :img)
+    ''', data)
 
 
 if __name__ == "__main__":
